@@ -18,7 +18,7 @@ const NavBar = () => {
       <li><NavLink to="/wishlist">WishList</NavLink></li>
       </ul>
     </div>
-    <Link to="/" className=" text-xl">HomeDecor</Link>
+    <Link to="/" className=" text-xl font-bold">HomeDecor</Link>
   </div>
   <div className="navbar-center ">
    
