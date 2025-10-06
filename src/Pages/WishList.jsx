@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { loadWishlist, removeFromWishlist } from "../Utils/LocalStorage";
 
 const WishList = () => {
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(()=>loadWishlist());
   const [sortOrder, setSortOrder] = useState("none");
-  useEffect(() => {
-    const savedList = JSON.parse(localStorage.getItem("wishlist"));
-    if (savedList) {
-      setWishlist(savedList);
-    }
-  }, []);
+ 
+
+  if(!wishlist.length) return <p className="text-center font-semibold mt-10">No Data Available</p>
 
   const sortedItem = (() => {
     if (sortOrder === "price-asc") {
@@ -26,11 +24,11 @@ const WishList = () => {
   })();
 
   const handleRemove = (id) => {
-     const existingList = JSON.parse(localStorage.getItem("wishlist"))
-        let updatedList =existingList.filter(p=>p.id !==id)
+    // remove from localstorage
+    removeFromWishlist(id)
         // for ui instant update
-        setWishlist(updatedList)
-localStorage.setItem("wishlist", JSON.stringify(updatedList))
+        setWishlist(prev => prev.filter(p=>p.id !== id))
+
   };
 
 
