@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const WishList = () => {
   const [wishlist, setWishlist] = useState([]);
@@ -28,9 +29,24 @@ const WishList = () => {
      const existingList = JSON.parse(localStorage.getItem("wishlist"))
         let updatedList =existingList.filter(p=>p.id !==id)
         // for ui instant update
-        setWishlist(prev => prev.filter(p=>p.id !== id))
+        setWishlist(updatedList)
 localStorage.setItem("wishlist", JSON.stringify(updatedList))
   };
+
+
+//   Generate chart data 
+const totalsByCategory = {}
+wishlist.forEach(product =>{
+    const category = product.category
+    totalsByCategory[category]=(totalsByCategory[category] || 0) + product.price
+})
+// console.log(totalsByCategory)
+const chartData = Object.keys(totalsByCategory).map(category=>({
+    category: category,
+    total:totalsByCategory[category],
+
+}))
+console.log(chartData);
 
   return (
     <div className="space-y-6">
@@ -76,6 +92,28 @@ localStorage.setItem("wishlist", JSON.stringify(updatedList))
             </div>
           </div>
         ))}
+      </div>
+
+      {/*  Chart */}
+      <div className="space-y-3">
+        <h3 className="text-xl font-semibold">Wishlist Summery</h3>
+        <div className="bg-base-100 border rounded-xl p-4 h-80">
+<ResponsiveContainer width="100%" height="100%">
+      <BarChart
+       
+        data={chartData}
+       
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="category" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+       
+        <Bar dataKey="total"  fill="#82ca9d" />
+      </BarChart>
+    </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
